@@ -152,7 +152,7 @@ func main() {
 
 			opitem := OrderProductItem{}
 
-			items, ierror := db.Queryx("SELECT id, order_product_id, aircraft_model_id, item_id, quantity, subscription_period, start_date, end_date, status, excluded_in FROM order_products_items WHERE order_product_id = $1", oproduct.ID)
+			items, ierror := db.Queryx("SELECT id, order_product_id, aircraft_model_id, item_id, quantity, subscription_period, start_date, end_date, status, excluded_in FROM order_products_items WHERE order_product_id = $1 AND id NOT IN (SELECT order_product_item_id FROM optionals_pro_rated_items opri)", oproduct.ID)
 
 			if ierror != nil {
 				log.Fatalln(ierror)
@@ -210,6 +210,8 @@ func main() {
 				if aerror != nil {
 					log.Fatalln(aerror)
 				}
+
+				defer models.Close()
 
 				for models.Next() {
 					err := models.StructScan(&aircraft)

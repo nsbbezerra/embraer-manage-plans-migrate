@@ -238,6 +238,8 @@ func main() {
 				}
 			}
 		}
+
+		log.Printf("Save successfuly order: %s", order.Onumber)
 	}
 
 	log.Println("Save process is finish!")
